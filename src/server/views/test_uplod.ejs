@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="https://cdn.bootcdn.net/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/socket.io-stream/0.9.1/socket.io-stream.min.js"></script>
+</head>
+
+<body>
+	<input type="file">
+	<input type="button" value="上传">
+</body>
+<script>
+	const socket = io('http://192.168.0.103:20201');
+
+	socket.on('connection', (socket) => {
+		console.log('connect');
+	});
+
+	socket.on('connect_timeout', () => {
+		console.log('connect_timeout');
+	})
+
+
+	const fileInput = document.querySelector('input[type="file"]');
+	const btn = document.querySelector('input[type="button"]');
+
+
+	btn.onclick = () => {
+		const file = fileInput.files[0];
+		if (file) {
+			var stream = ss.createStream();
+			console.log(file.size)
+			var blobStream = ss.createBlobReadStream(file);
+			var size = 0;
+
+			blobStream.on('data', function (chunk) {
+				size += chunk.length;
+				console.log(Math.floor(size / file.size * 100) + '%');
+			});
+			blobStream.pipe(stream);
+			ss(socket).emit('upload-file', stream, { size: file.size });
+		}
+	}
+
+</script>
+
+</html>

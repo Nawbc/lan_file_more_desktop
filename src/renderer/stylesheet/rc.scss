@@ -1,0 +1,326 @@
+.rc-tabs-dropdown {
+	position: absolute;
+	background: #fefefe;
+	border: 1px solid black;
+	max-height: 200px;
+	overflow: auto;
+}
+.rc-tabs-dropdown-hidden {
+	display: none;
+}
+.rc-tabs-dropdown-menu {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.rc-tabs-dropdown-menu-item {
+	padding: 4px 8px;
+}
+.rc-tabs-dropdown-menu-item-selected {
+	background: #007aff;
+}
+.rc-tabs-dropdown-menu-item-disabled {
+	opacity: 0.3;
+	cursor: not-allowed;
+}
+.rc-tabs-content {
+	display: flex;
+	width: 100%;
+}
+.rc-tabs-content-holder {
+	flex: auto;
+}
+.rc-tabs-content-animated {
+	transition: margin 0.3s;
+}
+.rc-tabs-tabpane {
+	width: 100%;
+	flex: none;
+}
+.rc-tabs {
+	display: flex;
+}
+.rc-tabs-top,
+.rc-tabs-bottom {
+	flex-direction: column;
+}
+.rc-tabs-top .rc-tabs-ink-bar,
+.rc-tabs-bottom .rc-tabs-ink-bar {
+	height: 3px;
+}
+.rc-tabs-top .rc-tabs-ink-bar {
+	bottom: 0;
+}
+.rc-tabs-bottom .rc-tabs-nav {
+	order: 1;
+}
+.rc-tabs-bottom .rc-tabs-content {
+	order: 0;
+}
+.rc-tabs-bottom .rc-tabs-ink-bar {
+	top: 0;
+}
+.rc-tabs-left.rc-tabs-editable .rc-tabs-tab,
+.rc-tabs-right.rc-tabs-editable .rc-tabs-tab {
+	padding-right: 32px;
+}
+.rc-tabs-left .rc-tabs-nav-wrap,
+.rc-tabs-right .rc-tabs-nav-wrap {
+	flex-direction: column;
+}
+.rc-tabs-left .rc-tabs-ink-bar,
+.rc-tabs-right .rc-tabs-ink-bar {
+	width: 3px;
+}
+.rc-tabs-left .rc-tabs-nav,
+.rc-tabs-right .rc-tabs-nav {
+	flex-direction: column;
+	min-width: 50px;
+}
+.rc-tabs-left .rc-tabs-nav-list,
+.rc-tabs-right .rc-tabs-nav-list {
+	flex-direction: column;
+}
+.rc-tabs-left .rc-tabs-nav-operations,
+.rc-tabs-right .rc-tabs-nav-operations {
+	flex-direction: column;
+}
+.rc-tabs-left .rc-tabs-ink-bar {
+	right: 0;
+}
+.rc-tabs-right .rc-tabs-nav {
+	order: 1;
+}
+.rc-tabs-right .rc-tabs-content {
+	order: 0;
+}
+.rc-tabs-right .rc-tabs-ink-bar {
+	left: 0;
+}
+.rc-tabs-rtl {
+	direction: rtl;
+}
+.rc-tabs-dropdown-rtl {
+	direction: rtl;
+}
+.rc-tabs {
+	font-size: 14px;
+	overflow: hidden;
+}
+.rc-tabs-nav {
+	display: flex;
+	flex: none;
+	position: relative;
+	padding-left: 30px;
+}
+.rc-tabs-nav-measure,
+.rc-tabs-nav-wrap {
+	transform: translate(0);
+	position: relative;
+	display: inline-block;
+	flex: auto;
+	white-space: nowrap;
+	overflow: hidden;
+	display: flex;
+}
+.rc-tabs-nav-measure-ping-left::before,
+.rc-tabs-nav-wrap-ping-left::before,
+.rc-tabs-nav-measure-ping-right::after,
+.rc-tabs-nav-wrap-ping-right::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+}
+.rc-tabs-nav-measure-ping-left::before,
+.rc-tabs-nav-wrap-ping-left::before {
+	left: 0;
+	border-left: 1px solid #007aff;
+}
+.rc-tabs-nav-measure-ping-right::after,
+.rc-tabs-nav-wrap-ping-right::after {
+	right: 0;
+	border-right: 1px solid #007aff;
+}
+.rc-tabs-nav-measure-ping-top::before,
+.rc-tabs-nav-wrap-ping-top::before,
+.rc-tabs-nav-measure-ping-bottom::after,
+.rc-tabs-nav-wrap-ping-bottom::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+.rc-tabs-nav-measure-ping-top::before,
+.rc-tabs-nav-wrap-ping-top::before {
+	top: 0;
+	border-top: 1px solid #007aff;
+}
+.rc-tabs-nav-measure-ping-bottom::after,
+.rc-tabs-nav-wrap-ping-bottom::after {
+	bottom: 0;
+	border-top: 1px solid #007aff;
+}
+.rc-tabs-nav-list {
+	display: flex;
+	position: relative;
+	transition: transform 0.3s;
+}
+.rc-tabs-nav-operations {
+	display: flex;
+}
+.rc-tabs-nav-operations-hidden {
+	position: absolute;
+	visibility: hidden;
+	pointer-events: none;
+}
+.rc-tabs-nav-more {
+	border: 1px solid blue;
+	background: rgba(255, 0, 0, 0.1);
+}
+.rc-tabs-nav-add {
+	border: 1px solid green;
+	background: rgba(0, 255, 0, 0.1);
+}
+.rc-tabs-tab {
+	border: 0;
+	font-size: 18px;
+	background: rgba(255, 255, 255, 0.5);
+	margin: 0;
+	display: flex;
+	outline: none;
+	cursor: pointer;
+	position: relative;
+	font-weight: lighter;
+	align-items: center;
+	margin-right: 20px;
+	user-select: none;
+}
+.rc-tabs-tab-btn,
+.rc-tabs-tab-remove {
+	border: 0;
+	background: transparent;
+}
+.rc-tabs-tab-btn {
+	font-weight: inherit;
+	line-height: 32px;
+}
+.rc-tabs-tab-remove:hover {
+	color: #007aff;
+}
+.rc-tabs-tab-active {
+	font-weight: bolder;
+}
+.rc-tabs-ink-bar {
+	position: absolute;
+	background: #007aff;
+	pointer-events: none;
+}
+.rc-tabs-ink-bar-animated {
+	transition: all 0.3s;
+}
+.rc-tabs-extra-content {
+	flex: none;
+}
+
+.rc-switch {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	width: 44px;
+	height: 22px;
+	line-height: 20px;
+	padding: 0;
+	vertical-align: middle;
+	border-radius: 20px 20px;
+	border: 1px solid #ccc;
+	background-color: #ccc;
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+	transform: scale(0.7);
+}
+.rc-switch-inner {
+	color: #fff;
+	font-size: 12px;
+	position: absolute;
+	left: 24px;
+	top: 0;
+}
+.rc-switch:after {
+	position: absolute;
+	width: 18px;
+	height: 18px;
+	left: 2px;
+	top: 1px;
+	border-radius: 50% 50%;
+	background-color: #fff;
+	content: " ";
+	cursor: pointer;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+	transform: scale(1);
+	transition: left 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+	animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);
+	animation-duration: 0.3s;
+	animation-name: rcSwitchOff;
+}
+.rc-switch:hover:after {
+	transform: scale(1.1);
+	animation-name: rcSwitchOn;
+}
+.rc-switch:focus {
+	box-shadow: 0 0 0 2px #d5f1fd;
+	outline: none;
+}
+.rc-switch-checked {
+	border: 1px solid #001aff;
+	background-color: #007aff;
+}
+.rc-switch-checked .rc-switch-inner {
+	left: 6px;
+}
+.rc-switch-checked:after {
+	left: 22px;
+}
+.rc-switch-disabled {
+	cursor: no-drop;
+	background: #ccc;
+	border-color: #ccc;
+}
+.rc-switch-disabled:after {
+	background: #9e9e9e;
+	animation-name: none;
+	cursor: no-drop;
+}
+.rc-switch-disabled:hover:after {
+	transform: scale(1);
+	animation-name: none;
+}
+.rc-switch-label {
+	display: inline-block;
+	line-height: 20px;
+	font-size: 14px;
+	padding-left: 10px;
+	vertical-align: middle;
+	white-space: normal;
+	pointer-events: none;
+	user-select: text;
+}
+@keyframes rcSwitchOn {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.25);
+	}
+	100% {
+		transform: scale(1.1);
+	}
+}
+@keyframes rcSwitchOff {
+	0% {
+		transform: scale(1.1);
+	}
+	100% {
+		transform: scale(1);
+	}
+}

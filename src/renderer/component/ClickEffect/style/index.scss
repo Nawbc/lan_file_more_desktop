@@ -1,0 +1,13 @@
+.click-down {
+	position: relative;
+	transition: transform 100ms ease-in;
+	display: inline-flex;
+	align-items: center;
+}
+
+.click-down:hover {
+}
+
+.click-down:active {
+	transform: translateY(4px);
+}
