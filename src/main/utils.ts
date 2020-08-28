@@ -4,5 +4,5 @@ if (isProduction) {
 	console.warn = function () { };
 	console.info = function () { };
 	// eslint-disable-next-line no-console
-	console.debug = function () { };
+	console.log = function () { };
 }

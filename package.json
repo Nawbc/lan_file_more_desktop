@@ -1,11 +1,11 @@
 {
 	"name": "lan_express_desktop",
 	"version": "0.0.1",
-	"description": "> TODO: description",
+	"description": "局域网.文件.更多 桌面版",
 	"author": "sewerganger <wanghan9423@outlook.com>",
 	"homepage": "",
 	"license": "GPL-3.0",
-	"main": "dist/main.js",
+	"main": "main.js",
 	"publishConfig": {
 		"registry": "https://registry.npm.taobao.org/"
 	},
@@ -66,25 +66,28 @@
 		"webpack": "^4.43.0"
 	},
 	"dependencies": {
+		"axios": "^0.20.0",
 		"classnames": "^2.2.6",
 		"consolidate": "^0.15.1",
 		"delay": "^4.4.0",
 		"electron-log": "^4.2.2",
 		"electron-unhandled": "^3.0.2",
+		"electron-util": "^0.14.2",
 		"express": "^4.17.1",
 		"into-stream": "^5.1.1",
 		"ip": "^1.1.5",
 		"localforage": "^1.7.4",
 		"mobx": "^5.15.4",
 		"mobx-react": "^6.2.5",
+		"rc-notification": "^4.4.0",
 		"rc-tabs": "^11.5.6",
 		"react": "^16.13.1",
 		"react-custom-scrollbars": "^4.2.1",
 		"react-dom": "^16.13.1",
 		"react-inlinesvg": "^2.0.0",
 		"react-router-dom": "^5.2.0",
-		"request-promise": "^4.2.6",
 		"robotjs": "^0.6.0",
+		"semver": "^7.3.2",
 		"socket.io": "^2.3.0",
 		"socket.io-stream": "^0.9.1",
 		"webpack-node-externals": "^2.5.0"

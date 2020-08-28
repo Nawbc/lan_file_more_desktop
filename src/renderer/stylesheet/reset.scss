@@ -151,12 +151,12 @@ h6 {
 	margin: 0;
 }
 
-ul,
-ol {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
+// ul,
+// ol {
+// 	margin: 0;
+// 	padding: 0;
+// 	list-style: none;
+// }
 
 input,
 select,
@@ -298,4 +298,9 @@ th {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.clear-float {
+	clear: both;
+	content: "";
 }

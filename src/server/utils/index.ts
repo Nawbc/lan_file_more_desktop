@@ -2,7 +2,7 @@
 import os from 'os';
 import net from 'net';
 import ipUtil from 'ip';
-import request from 'request-promise';
+// import request from 'request-promise';
 import ping from '../external/net-ping';
 
 const session = ping.createSession();
@@ -65,7 +65,7 @@ export const getAliveIps = async () => {
 	await Promise.all(ipPromise).catch((err) => {
 		console.log(err);
 	});
-	console.debug(aliveIpsInLan);
+	console.log(aliveIpsInLan);
 	return aliveIpsInLan;
 };
 
@@ -89,22 +89,22 @@ interface AliveDeviceInfo {
 	port: number;
 }
 
-export const findAliveDevices = async (port): Promise<AliveDeviceInfo[]> => {
-	const ips = await getAliveIps();
-	const aliveDevices: AliveDeviceInfo[] = [];
+// export const findAliveDevices = async (port): Promise<AliveDeviceInfo[]> => {
+// 	const ips = await getAliveIps();
+// 	const aliveDevices: AliveDeviceInfo[] = [];
 
-	for await (const ip of ips) {
-		const targetPort = port + 1;
-		const url = 'http://' + ip + ':' + targetPort + '/check';
-		await request(url).then(() => {
-			aliveDevices.push({
-				url,
-				ip,
-				port: targetPort
-			});
-		}).catch(() => { });
-	}
-	return aliveDevices;
-};
+// 	for await (const ip of ips) {
+// 		const targetPort = port + 1;
+// 		const url = 'http://' + ip + ':' + targetPort + '/check';
+// 		await request(url).then(() => {
+// 			aliveDevices.push({
+// 				url,
+// 				ip,
+// 				port: targetPort
+// 			});
+// 		}).catch(() => { });
+// 	}
+// 	return aliveDevices;
+// };
 
 export * from './filesHandler';

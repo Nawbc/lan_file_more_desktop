@@ -10,7 +10,7 @@ import socketIo from 'socket.io';
 import ss from 'socket.io-stream';
 import { createWriteStream } from 'fs';
 import { homedir } from 'os';
-import { getSeeminglyLanAddress, findAliveDevices } from './utils';
+import { getSeeminglyLanAddress } from './utils';
 
 const port = 20201;
 const localIp = getSeeminglyLanAddress();
@@ -59,7 +59,7 @@ const createLocalServer = async (options: Options): Promise<http.Server> => {
 
 	srv.listen(port, localIp.seemsIp, async () => {
 		const addr = srv.address() as any;
-		console.debug(`${addr.address}:${addr.port}`);
+		console.log(`=========${addr.address}:${addr.port}==========`);
 	});
 
 	srv.on('error', (err: any) => {
@@ -74,7 +74,7 @@ const createLocalServer = async (options: Options): Promise<http.Server> => {
 	});
 
 	srv.on('close', () => {
-		console.debug('server closed');
+		console.log('server closed');
 	});
 
 	//---------------------------------------------------------------------------
@@ -84,10 +84,10 @@ const createLocalServer = async (options: Options): Promise<http.Server> => {
 
 	socketServer.on('connection', function (socket) {
 		connectCount++;
-		console.debug(`${socket.handshake.headers.host} ${connectCount} connected`);
+		console.log(`${socket.handshake.headers.host} ${connectCount} connected`);
 
 		socket.on('disconnect', function () {
-			console.debug('socket disconnected');
+			console.log('socket disconnected');
 		});
 
 		process.on('message', (msg) => {
@@ -142,10 +142,12 @@ const createLocalServer = async (options: Options): Promise<http.Server> => {
 };
 
 process.on('message', async (msg) => {
-	// console.debug('server process msg: ', msg);z
+	// console.log('server process msg: ', msg);
 	switch (msg.signal) {
 		case 'server-start':
-			httpServer = await createLocalServer(msg.settings);
+			if (msg.settings?.purchased) {
+				httpServer = await createLocalServer(msg.settings);
+			}
 			break;
 		case 'server-close':
 			httpServer.close();

@@ -11,6 +11,7 @@ import classNames from 'classnames';
 // import * as robot from 'robotjs';
 // const robot = require('robotjs');
 import './index.scss';
+import { BottomModal } from '../../component/BottomModal';
 
 const clipboardEx = new ClipboardEx();
 
@@ -27,17 +28,16 @@ export const ColCenter = (props) => {
 };
 
 const MainPage: FC<any> = function (props) {
-	const { children } = props;
 	const [localAddr, setLocalAddr] = useState('');
-	const [modal, setModal] = useState(false);
+
 	const [devices] = useState([]);
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
 	useEffect(() => {
-		(async () => {
-			const data = await getLocalForageAllItems();
 
-			ipcRenderer.on('local-ip-found', (event, msg) => {
+		(async () => {
+			ipcRenderer.on('local-ip-found', async (event, msg) => {
+				const data = await getLocalForageAllItems();
 				ipcRenderer.send('app-settings', data);
 				clipboardEx.start();
 				setLocalAddr(msg.host + ':' + msg.port);
@@ -58,7 +58,6 @@ const MainPage: FC<any> = function (props) {
 				ipcRenderer.send('clipboard-to-client', data);
 			});
 		})();
-
 	}, []);
 
 	return (
@@ -103,60 +102,30 @@ const MainPage: FC<any> = function (props) {
 					}
 				</div>
 			</div >
+			<BottomModal overflowHeight={35}>
+				<div style={{
+					height: 35,
+					display: 'flex',
+					justifyContent: 'center',
+					alignItems: 'center'
+				}} >已连接设备</div>
+				{devices.map((val, index) =>
+					<div
+						key={index}
+						style={{
+							padding: 10,
+							display: 'flex',
+							justifyContent: 'center',
+							alignItems: 'center'
+						}}
+					>
+						<Icon src={netSvg} style={{ width: 20, height: 'unset' }} />
+						<div style={{ width: 10 }} />
+						<span>{val}</span>
+						<div style={{ width: 10 }} />
 
-			<div>
-				<div
-					style={Object.assign({},
-						modal ? {
-							position: 'absolute',
-							top: 0,
-							right: 0,
-							bottom: 0,
-							left: 0
-						} : {}
-					) as any}
-					className={classNames('mask', 'modal')}
-					onClick={() => {
-
-						if (modal) {
-							setModal(false);
-						}
-					}} />
-				<div
-					className={classNames('bottom-modal', {
-						'close': modal
-					})}
-
-					onClick={() => {
-						if (!modal) {
-							setModal(true);
-						}
-					}}
-				>
-					<div style={{
-						height: 35,
-						display: 'flex',
-						justifyContent: 'center',
-						alignItems: 'center'
-					}} >已连接设备</div>
-					{devices.map((val, index) =>
-						<div
-							key={index}
-							style={{
-								padding: 10,
-								display: 'flex',
-								justifyContent: 'center',
-								alignItems: 'center'
-							}}
-						>
-							<Icon src={netSvg} style={{ width: 20, height: 'unset' }} />
-							<div style={{ width: 10 }} />
-							<span>{val}</span>
-							<div style={{ width: 10 }} />
-							<Button value="断开" />
-						</div>)}
-				</div>
-			</div>
+					</div>)}
+			</BottomModal>
 		</>
 	);
 };

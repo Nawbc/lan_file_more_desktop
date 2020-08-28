@@ -5,3 +5,4 @@ export * from './TitleBar';
 export * from './Button';
 export * from './SettingItem';
 export { default as Switch } from './Switch';
+export * from './BottomModal';

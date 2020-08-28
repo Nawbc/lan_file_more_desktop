@@ -1,14 +1,14 @@
-.bottom-modal {
-	position: fixed;
-	bottom: 0;
-	height: 400px;
-	width: 100vw;
-	background: #b3b3b329;
-	transform: translateY(365px);
-	transition: transform 300ms ease;
-	backdrop-filter: saturate(180%) blur(20px);
-}
+// .bottom-modal {
+// 	position: fixed;
+// 	bottom: 0;
+// 	height: 400px;
+// 	width: 100vw;
+// 	background: #b3b3b329;
+// 	transform: translateY(365px);
+// 	transition: transform 300ms ease;
+// 	backdrop-filter: saturate(180%) blur(20px);
+// }
 
-.bottom-modal.close {
-	transform: translateY(0px);
-}
+// .bottom-modal.close {
+// 	transform: translateY(0px);
+// }

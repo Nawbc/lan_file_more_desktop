@@ -3,12 +3,30 @@ import { Tray, screen, nativeImage } from 'electron';
 import { app, BrowserWindow, ipcMain, Menu } from 'electron';
 import { resolve, basename } from 'path';
 import { fork, ChildProcess } from 'child_process';
-// import * as robot from 'robotjs';
-import os from 'os';
+import { default as unhandled } from 'electron-unhandled';
+import { openNewGitHubIssue, debugInfo } from 'electron-util';
 
-export const logoImage = nativeImage.createFromPath(resolve(__dirname, '../renderer/assets/logo.png'));
+// import * as robot from 'robotjs';
+// import os from 'os'; `
+
+export const logoImage = nativeImage.createFromPath(resolve(app.getAppPath(), './icons/png/16x16.png'));
+
+const isProduction = process.env.NODE_ENV;
+
+if (isProduction) {
+	unhandled({
+		reportButton: err => {
+			openNewGitHubIssue({
+				user: 'sewerganger',
+				repo: 'lan_express_desktop_bug_report',
+				body: `\`\`\`\n${err.stack}\n\`\`\`\n\n---\n\n${debugInfo()}`
+			});
+		}
+	});
+}
 
 const windowPath = resolve(app.getAppPath(), './index.html');
+
 const setAutoLogin = (isAuto = true) => {
 	app.setLoginItemSettings({
 		openAtLogin: isAuto,
@@ -17,12 +35,6 @@ const setAutoLogin = (isAuto = true) => {
 		args: ['--processStart', `${basename(process.execPath)}`]
 	});
 };
-
-// interface AppSettings {
-// 	savePath: string;
-// 	purchase: boolean;
-// 	isInit: boolean;
-// }
 
 let mainWindow: BrowserWindow;
 let tray: Tray;
@@ -35,7 +47,7 @@ const showAtPos = (mainWindow: BrowserWindow) => {
 	mainWindow.setPosition(width - 310, height - 610, true);
 };
 
-const createInitWindow = (): void => {
+const createInitWindow = async (): Promise<void> => {
 
 	mainWindow = new BrowserWindow({
 		frame: false,
@@ -52,6 +64,8 @@ const createInitWindow = (): void => {
 	});
 
 	mainWindow.loadURL(windowPath);
+
+	mainWindow.setSkipTaskbar(false);
 
 	showAtPos(mainWindow);
 
@@ -89,7 +103,7 @@ const createInitWindow = (): void => {
 	});
 
 	ipcMain.on('window-close', () => {
-		// mainWindow?.hide();
+		mainWindow?.hide();
 	});
 
 	ipcMain.on('clipboard-to-client', (event, data) => {
@@ -101,8 +115,10 @@ const createInitWindow = (): void => {
 		mainWindow?.destroy();
 	});
 
+	// mainWindow.on();
+
 	// ipcMain.on('keyboard', (event, data) => {
-	// 	console.debug(data);
+	// 	console.log(data);
 	// 	// console.log(robot.keyTap(''));
 	// 	robot.setMouseDelay(2);
 
@@ -122,9 +138,9 @@ const createInitWindow = (): void => {
 	srvProcess = fork(resolve(app.getAppPath(), './server.js'), ['--sub']);
 
 	srvProcess?.on('message', (msg) => {
-		console.debug(msg);
 		switch (msg.signal) {
 			case 'local-ip-error':
+				mainWindow?.webContents.send('local-ip-error');
 				break;
 			case 'upload-accomplish':
 				mainWindow?.webContents.send('upload-accomplish', msg);
@@ -137,6 +153,7 @@ const createInitWindow = (): void => {
 				break;
 			case 'local-ip-found':
 				{
+					console.log(msg);
 					mainWindow?.webContents.send('local-ip-found', msg);
 				}
 				break;
@@ -148,15 +165,15 @@ const createInitWindow = (): void => {
 	});
 
 	srvProcess?.stdout?.on('data', (data) => {
-		console.debug(data);
+		console.log(data);
 	});
 
 	srvProcess?.stderr?.on('data', (data) => {
-		console.debug(data);
+		console.log(data);
 	});
 
 	srvProcess?.on('exit', (code) => {
-		console.debug(`server exit ${code}`);
+		console.log(`server exit ${code}`);
 		mainWindow.webContents.send('server-exit');
 	});
 
@@ -185,11 +202,9 @@ const createInitWindow = (): void => {
 	tray.on('click', () => {
 		if (mainWindow?.isVisible()) {
 			mainWindow.hide();
-			mainWindow.setSkipTaskbar(false);
 		} else {
 			showAtPos(mainWindow);
 			mainWindow?.show();
-			mainWindow?.setSkipTaskbar(true);
 		}
 	});
 

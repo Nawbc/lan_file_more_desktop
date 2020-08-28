@@ -1,6 +1,7 @@
 import { observable, action } from 'mobx';
 import { remote } from 'electron';
 import localforage from 'localforage';
+import { BASE_URL } from '../utils/constants';
 
 export class SettingsStore {
 	@observable
@@ -16,7 +17,7 @@ export class SettingsStore {
 	isInit = false;
 
 	@observable
-	notificationSound = false;
+	notificationSound = true;
 
 	@observable
 	enableClipboard = true;
@@ -28,10 +29,21 @@ export class SettingsStore {
 	autoLogin = true;
 
 	@observable
-	historyLimit = 300;
+	historyLimit = 50;
+
+	@observable
+	baseUrl = BASE_URL;
+
+	lastMessage;
 
 	@action.bound
-	async setHistoryLimit(num: number) {
+	async setBaseUrl(url: string) {
+		this.baseUrl = url;
+		await localforage.setItem('baseUrl', url);
+	}
+
+	@action.bound
+	setHistoryLimit(num: number) {
 		this.historyLimit = num;
 	}
 
@@ -51,13 +63,15 @@ export class SettingsStore {
 	}
 
 	@action.bound
-	setPurchased(val: boolean) {
+	async setPurchased(val: boolean) {
 		this.purchased = val;
+		await localforage.setItem('purchased', val);
 	}
 
 	@action.bound
-	setNotificationSound(val: boolean) {
+	async setNotificationSound(val: boolean) {
 		this.notificationSound = val;
+		await localforage.setItem('notificationSound', val);
 	}
 
 	@action.bound
@@ -74,28 +88,4 @@ export class SettingsStore {
 	setAutoLogin(val: boolean) {
 		this.autoLogin = val;
 	}
-
 }
-
-// settingsStore.setIsinit = action(() => { 
-
-// })
-
-// appStore.addCount = action(() => {
-// 	appStore.counter += 1;
-// });
-// appStore.subCount = action(() => {
-// 	if (appStore.counter <= 0) {
-// 		return;
-// 	}
-// 	appStore.counter -= 1;
-// });
-// appStore.changeCount = action((key) => {
-// 	if (key <= 0) {
-// 		appStore.counter = 0;
-// 	}
-// 	appStore.counter = parseInt(key);
-// });
-// export default appStores;
-
-// const settingsProvider = observable();
