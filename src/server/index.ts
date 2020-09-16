@@ -4,22 +4,22 @@
 import express from 'express';
 import http from 'http';
 import { resolve, format } from 'path';
-import consolidate from 'consolidate';
-import { testRouter } from './routes';
+
 import socketIo from 'socket.io';
-import ss from 'socket.io-stream';
 import { createWriteStream } from 'fs';
 import { homedir } from 'os';
 import { getSeeminglyLanAddress } from './utils';
 
-const port = 20201;
 const localIp = getSeeminglyLanAddress();
 
 export interface Options {
 	staticPath?: string;
 	savePath?: string;
 	enableAutoConnect?: boolean;
+	filePort?: number;
 }
+
+export interface ConnectedMsg { deviceIp: string, codeSrvIp: string }
 
 let httpServer;
 let socketServer: socketIo.Server;
@@ -30,8 +30,7 @@ if (isSub) {
 	if (localIp?.seemsIp) {
 		process.send({
 			signal: 'local-ip-found',
-			host: localIp?.seemsIp,
-			port: port
+			host: localIp?.seemsIp
 		});
 	} else {
 		process.send({
@@ -48,8 +47,6 @@ const createLocalServer = async (options: Options): Promise<http.Server> => {
 	// 	res.render('index.ejs', {});
 	// });
 
-	app.use('/test', testRouter);
-
 	app.use('/assets', express.static(resolve(__dirname, './assets')));
 	// app.set("view engine", "html");
 	// app.set("views", __dirname + "/views");
@@ -57,7 +54,7 @@ const createLocalServer = async (options: Options): Promise<http.Server> => {
 
 	const srv = http.createServer(app);
 
-	srv.listen(port, localIp.seemsIp, async () => {
+	srv.listen(options.filePort ?? 20201, localIp.seemsIp, async () => {
 		const addr = srv.address() as any;
 		console.log(`=========${addr.address}:${addr.port}==========`);
 	});
@@ -100,10 +97,10 @@ const createLocalServer = async (options: Options): Promise<http.Server> => {
 			process.send({ signal: 'clipboard-to-server', data: msg });
 		});
 
-		socket.on('connected-address', (msg) => {
+		socket.on('connected-address', (msg: ConnectedMsg) => {
 			process.send({
 				signal: 'socket-connect',
-				host: msg
+				...msg
 			});
 		});
 

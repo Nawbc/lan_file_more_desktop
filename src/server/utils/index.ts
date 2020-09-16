@@ -2,17 +2,17 @@
 import os from 'os';
 import net from 'net';
 import ipUtil from 'ip';
-// import request from 'request-promise';
 import ping from '../external/net-ping';
 
 const session = ping.createSession();
 
 // 获取本机局域网的地址
 export const getSeeminglyLanAddress = (): { seemsIp: string, allIpv4: string[] } => {
-	const seemsIps = [];
-	const bIp = [];
+	const seemsIps: string[] = [];
+	const bIp: string[] = [];
 	const valid = {} as any;
 
+	// ip rfc
 	for (let index = 16; index < 32; index++) {
 		bIp.push(`172.${index}.0.0/16`);
 	}
@@ -65,7 +65,6 @@ export const getAliveIps = async () => {
 	await Promise.all(ipPromise).catch((err) => {
 		console.log(err);
 	});
-	console.log(aliveIpsInLan);
 	return aliveIpsInLan;
 };
 

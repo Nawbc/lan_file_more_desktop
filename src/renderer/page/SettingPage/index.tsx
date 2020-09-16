@@ -11,10 +11,11 @@ import { req } from '../../utils/req';
 import { stringify } from 'querystring';
 import pkg from '../../../../package.json';
 import semver from 'semver';
+import Notification, { NotificationInstance } from 'rc-notification/lib/Notification';
+import { KEY_BOUND_URL } from '../../utils/constants';
+import { clipboardEx } from '../MainPage';
 
 const { dialog, shell } = remote;
-
-import Notification, { NotificationInstance } from 'rc-notification/lib/Notification';
 
 let notification: NotificationInstance = null;
 Notification.newInstance({
@@ -26,7 +27,6 @@ const SettingPage: FC<any> = function (props) {
 	const { settingsStore, globalStore } = useStores();
 	const [username, setUsername] = useState('');
 	const [pwd, setPwd] = useState('');
-	const [, forceUpdate] = useReducer(x => x + 1, 0);
 	const [enableService, setEnableService] = useState(true);
 	const bottomModalRef: RefObject<BottomModalAction> = React.createRef();
 
@@ -61,7 +61,32 @@ const SettingPage: FC<any> = function (props) {
 							}}
 						/>}
 				/>
-
+				<SettingItem
+					title='服务端口'
+					subtitle={`${settingsStore.filePort}`}
+					trailing={
+						<input
+							type='number'
+							value={settingsStore.filePort}
+							style={{
+								width: 40,
+								height: 20,
+								border: '1px solid #999',
+								borderRadius: 5,
+								padding: '6px 2px',
+								fontSize: '10px',
+								margin: '0 9px'
+							}}
+							onChange={(event) => {
+								const value = event.target.value;
+								settingsStore.setFilePort(parseInt(value === '' ? '0' : value));
+							}}
+							onBlur={async () => {
+								await localforage.setItem('filePort', settingsStore.filePort);
+							}}
+						/>
+					}
+				/>
 				<SettingItem
 					title='剪贴板'
 					subtitle='连接设备之间无缝共享剪贴板'
@@ -70,6 +95,15 @@ const SettingPage: FC<any> = function (props) {
 							checked={settingsStore.enableClipboard}
 							onChange={async () => {
 								settingsStore.enableClipboard = !settingsStore.enableClipboard;
+								if (settingsStore.enableClipboard) {
+									clipboardEx.on('changed', (data) => {
+										ipcRenderer.send('clipboard-to-client', data);
+									});
+
+									clipboardEx?.start();
+								} else {
+									clipboardEx?.dispose();
+								}
 								await localforage.setItem('enableClipboard', settingsStore.enableClipboard);
 							}}
 						/>}
@@ -151,6 +185,16 @@ const SettingPage: FC<any> = function (props) {
 							}}
 						/>
 					}
+				/>
+				<SettingItem
+					style={{
+						cursor: 'pointer'
+					}}
+					title='按键绑定'
+					subtitle='远程控制 按键绑定对照表'
+					onClick={async () => {
+						await shell.openExternal(KEY_BOUND_URL);
+					}}
 				/>
 				<SettingItem
 					title='通知声音'
@@ -306,10 +350,6 @@ const SettingPage: FC<any> = function (props) {
 					<p>
 						请使用移动端注册的账号
 					</p>
-					{/* <p>
-						激活后app将会重启
-					</p> */}
-
 				</div>
 
 			</BottomModal>

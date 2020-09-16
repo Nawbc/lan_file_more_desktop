@@ -52,9 +52,9 @@ const App: FC = function () {
 			globalStore.setWebData(data);
 
 			if (!!data?.pc.disable) {
-
+				
 			}
-			console.log(data.pc.message.join(''), (await localforage.getItem('lastMessage')));
+
 			try {
 				if (data.pc.message.join('') !== (await localforage.getItem('lastMessage'))) {
 					msgRef.current?.show();

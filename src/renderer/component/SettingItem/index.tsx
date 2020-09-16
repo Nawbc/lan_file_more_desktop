@@ -6,10 +6,11 @@ interface SettingItemProps {
 	title?: string | React.ReactElement;
 	subtitle?: string | React.ReactElement;
 	trailing?: string | React.ReactElement;
+	[index: string]: any;
 }
 
 const SettingItem: FC<SettingItemProps> = function (props) {
-	const { title, subtitle, trailing, ...rest } = props;
+	const { title, subtitle, trailing, style, ...rest } = props;
 
 	return (
 		<div
@@ -21,7 +22,8 @@ const SettingItem: FC<SettingItemProps> = function (props) {
 				alignItems: 'center',
 				borderBottom: '1px solid #dedede',
 				marginTop: 10,
-				paddingBottom: 5
+				paddingBottom: 5,
+				...style
 			}}
 			className="setting-item" {...rest}>
 			<div>

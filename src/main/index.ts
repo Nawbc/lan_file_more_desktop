@@ -65,7 +65,7 @@ const createInitWindow = async (): Promise<void> => {
 
 	mainWindow.loadURL(windowPath);
 
-	mainWindow.setSkipTaskbar(false);
+	mainWindow.setSkipTaskbar(true);
 
 	showAtPos(mainWindow);
 
@@ -115,6 +115,10 @@ const createInitWindow = async (): Promise<void> => {
 		mainWindow?.destroy();
 	});
 
+	ipcMain.on('connection-change', () => {
+
+	});
+
 	// mainWindow.on();
 
 	// ipcMain.on('keyboard', (event, data) => {
@@ -153,7 +157,6 @@ const createInitWindow = async (): Promise<void> => {
 				break;
 			case 'local-ip-found':
 				{
-					console.log(msg);
 					mainWindow?.webContents.send('local-ip-found', msg);
 				}
 				break;

@@ -10,7 +10,7 @@ const isProduction = env === 'production';
 module.exports = {
 	mode: env,
 	entry: {
-		main: isProduction ? resolve(__dirname, '../../src/main/index.ts') : resolve(__dirname, '../../src/main/index.ts')
+		main: isProduction ? resolve(__dirname, '../../src/main/index.ts') : resolve(__dirname, '../../src/main/index.dev.ts')
 	},
 	target: 'electron-main',
 	output: {

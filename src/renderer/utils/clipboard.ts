@@ -14,6 +14,7 @@ export class ClipboardEx extends events.EventEmitter {
 
 	start = () => {
 		this.listener = setInterval(() => {
+			console.log(1111);
 			const nowText = clipboard.readText();
 			const nowImage = clipboard.readImage();
 			if (this.cachedText !== nowText) {
@@ -24,7 +25,7 @@ export class ClipboardEx extends events.EventEmitter {
 				this.emit('changed', nowImage);
 				this.cachedImage = nowImage?.toDataURL();
 			}
-		}, 500);
+		}, 1000);
 	}
 
 }

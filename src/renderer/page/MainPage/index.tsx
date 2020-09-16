@@ -1,19 +1,18 @@
 import React, { FC, useEffect, useState, useReducer } from 'react';
 import { Icon, Button } from '../../component';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import { ClipboardEx } from '../../utils/clipboard';
-import { getLocalForageAllItems } from '../../utils';
+import { getLocalForageAllItems, useStores } from '../../utils';
 import computerSvg from '../../assets/icons/computer.svg';
 import castSvg from '../../assets/icons/cast.svg';
 import castBlueSvg from '../../assets/icons/cast_blue.svg';
 import netSvg from '../../assets/icons/net.svg';
-import classNames from 'classnames';
+import vscodeSvg from '../../assets/icons/vscode.svg';
+import { BottomModal } from '../../component/BottomModal';
 // import * as robot from 'robotjs';
 // const robot = require('robotjs');
-import './index.scss';
-import { BottomModal } from '../../component/BottomModal';
 
-const clipboardEx = new ClipboardEx();
+export const clipboardEx = new ClipboardEx();
 
 export const ColCenter = (props) => {
 	const { children } = props;
@@ -29,8 +28,11 @@ export const ColCenter = (props) => {
 
 const MainPage: FC<any> = function (props) {
 	const [localAddr, setLocalAddr] = useState('');
+	const { settingsStore } = useStores();
 
 	const [devices] = useState([]);
+	const [codeSrvAddr, setCodeSrvAddr] = useState(null);
+
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
 	useEffect(() => {
@@ -39,14 +41,20 @@ const MainPage: FC<any> = function (props) {
 			ipcRenderer.on('local-ip-found', async (event, msg) => {
 				const data = await getLocalForageAllItems();
 				ipcRenderer.send('app-settings', data);
-				clipboardEx.start();
-				setLocalAddr(msg.host + ':' + msg.port);
+				if (settingsStore.enableClipboard) {
+					clipboardEx.start();
+				}
+				setLocalAddr(msg.host + ':' + settingsStore.filePort);
 			});
 
 			ipcRenderer.on('socket-connect', (event, msg) => {
-				if (!devices.includes(msg.host)) {
-					devices.push(msg.host);
+				if (!devices.includes(msg.deviceIp)) {
+					devices.push(msg.deviceIp);
 					forceUpdate();
+				}
+
+				if (!!!codeSrvAddr) {
+					setCodeSrvAddr(msg.codeSrvIp);
 				}
 			});
 
@@ -57,6 +65,11 @@ const MainPage: FC<any> = function (props) {
 			clipboardEx.on('changed', (data) => {
 				ipcRenderer.send('clipboard-to-client', data);
 			});
+
+			(navigator as any).connection.onchange = () => {
+				ipcRenderer.send('connection-change');
+			};
+
 		})();
 	}, []);
 
@@ -64,11 +77,24 @@ const MainPage: FC<any> = function (props) {
 		<>
 			<div style={{ padding: 20 }}>
 				<div style={{
-					display: 'inline-flex',
-					justifyContent: 'space-between'
+					display: 'flex'
 				}}>
-					<Icon src={computerSvg} style={{ width: 20, height: 'unset' }} />&nbsp;:&nbsp;{localAddr}&nbsp;<span>服务地址</span>
+					<Icon src={computerSvg} style={{ width: 20, height: 'unset' }} />&nbsp;:&nbsp;{localAddr}&nbsp;<span>服务</span>
 				</div>
+				<div style={{ height: 10 }} />
+
+				{
+					!!codeSrvAddr ?
+						<div style={{
+							display: 'flex'
+						}}>
+							<Icon src={vscodeSvg} style={{ width: 20, height: 'unset' }} />&nbsp;:&nbsp;{codeSrvAddr}&nbsp;<span>
+								<Button onClick={async () => {
+									await remote.shell.openExternal(`http://${codeSrvAddr}`);
+								}}>打开</Button>
+							</span>
+						</div> : null
+				}
 				<div style={{
 					height: 400,
 					display: 'flex',
@@ -87,13 +113,7 @@ const MainPage: FC<any> = function (props) {
 								<div style={{ height: 10 }} />
 								<span
 									onClick={() => {
-										console.log('demo');
-										// robot.keyTap("home");
-										// console.log((robot as any).default);
-										ipcRenderer.send('keyboard', 'home');
-										// console.log(robot.keyTap);
-										// console.log(robot);
-
+										ipcRenderer.send('keyboard', 'c');
 									}}
 
 								>暂无设备</span>

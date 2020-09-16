@@ -4,6 +4,8 @@ import localforage from 'localforage';
 import { BASE_URL } from '../utils/constants';
 
 export class SettingsStore {
+	lastMessage;
+
 	@observable
 	savePath = remote.app.getPath('downloads');
 
@@ -34,7 +36,14 @@ export class SettingsStore {
 	@observable
 	baseUrl = BASE_URL;
 
-	lastMessage;
+	@observable
+	filePort = 20201;
+
+	@action.bound
+	async setFilePort(port: number) {
+		this.filePort = port;
+		await localforage.setItem('filePort', port);
+	}
 
 	@action.bound
 	async setBaseUrl(url: string) {

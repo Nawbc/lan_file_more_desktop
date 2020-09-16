@@ -120,6 +120,7 @@ const buildServer = () => new Promise((resolve, reject) => {
 				installerIcon: path.resolve(__dirname, '../res/icons/win/icon.ico'),
 				uninstallerIcon: path.resolve(__dirname, '../res/icons/win/icon.ico')
 			},
+			asar: true,
 			artifactName: '${name}-setup-${version}.${ext}'
 		}
 	})
