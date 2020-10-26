@@ -1,14 +1,1 @@
-# `shadow-app`
-
-> TODO: description
-
-## Usage
-
-```
-
-
-
-```
-
-[For contributor](./doc/dev.md)
-`
+# lan_file_more_desktop Pc端主程序
