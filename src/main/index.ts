@@ -141,7 +141,7 @@ const createInitWindow = async (): Promise<void> => {
 
 	srvProcess = fork(resolve(app.getAppPath(), './server.js'), ['--sub']);
 
-	srvProcess?.on('message', (msg) => {
+	srvProcess?.on('message', (msg: any) => {
 		switch (msg.signal) {
 			case 'local-ip-error':
 				mainWindow?.webContents.send('local-ip-error');

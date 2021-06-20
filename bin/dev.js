@@ -13,11 +13,11 @@ const ioHook = require('iohook');
 
 let electronProcess = null;
 
-const printDevTitle = () =>
-	say('LAN EXPRESS', {
-		font: 'block',
-		colors: ['white']
-	});
+// const printDevTitle = () =>
+// 	say('LAN EXPRESS', {
+// 		font: 'block',
+// 		colors: ['white']
+// 	});
 
 const bootElectron = () => new Promise((resolve, reject) => {
 

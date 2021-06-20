@@ -69,7 +69,7 @@ const buildServer = () => new Promise((resolve, reject) => {
 	await builder.build({
 		targets: Platform.WINDOWS.createTarget(['nsis']),
 		config: {
-			productName: '局域网.文件.更多',
+			productName: 'IOS管理器',
 			appId: 'com.sewerganger.lan_express_desktop',
 			icon: 'res/icons/win/icon.ico',
 			files: [
